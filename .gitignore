@@ -1,0 +1,13 @@
+out/
+*.pdb
+*.obj
+*.iobj
+*.ipdb
+*.tlog/
+*.recipe
+*.ilk
+*.log
+.trae/
+
+# 保留 VS 项目文件
+!build/msvc/**
