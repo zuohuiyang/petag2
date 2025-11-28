@@ -29,8 +29,6 @@ static std::wstring Utf8ToWide(const std::string& s) {
   return w;
 }
 
-// no-op
-
 int main(int argc, char** argv) {
   if (argc < 2) { PrintHelp(); return 1; }
   std::string cmd = argv[1];
@@ -65,9 +63,6 @@ int main(int argc, char** argv) {
     FreeLibrary(h);
     return 0;
   }
-
-  
-
   if (cmd == "-i" || cmd == "--insert") {
     if (argc != 5) { pctag::LogError("Invalid arguments for insert"); PrintHelp(); FreeLibrary(h); return 1; }
     std::wstring in = Utf8ToWide(argv[2]);
@@ -79,11 +74,6 @@ int main(int argc, char** argv) {
     FreeLibrary(h);
     return 0;
   }
-
-  
-
-  
-
   pctag::LogError("Unknown command");
   PrintHelp();
   FreeLibrary(h);

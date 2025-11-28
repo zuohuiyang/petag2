@@ -18,8 +18,8 @@ if not exist "%SAMPLE%" (
   exit /b 1
 )
 
-echo Insert metadata via DLL
-"%TOOL%" --insert "%SAMPLE%" "%OUTPUT%" "{test_chan:127}"
+echo Insert metadata via DLL (JSON)
+"%TOOL%" --insert "%SAMPLE%" "%OUTPUT%" "{\"test_chan\":127}"
 if errorlevel 1 (
   echo Insert failed
   exit /b 1

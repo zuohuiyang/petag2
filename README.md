@@ -15,9 +15,30 @@
   - `<input>` 为源签名文件路径（PE 文件，如 `.exe`）
   - `<output>` 为目标文件路径（写入嵌入信息后的新文件）
 - 示例：
-  - 插入：`petag2.exe --insert .\samples\signed.exe .\out\x64\Release\signed_tagged.exe "{test_chan:123}"`
+  - 插入：`petag2.exe --insert .\samples\signed.exe .\out\x64\Release\signed_tagged.exe "{\"test_chan\":123}"`
   - 读取：`petag2.exe --read .\out\x64\Release\signed_tagged.exe`
   - 帮助：`petag2.exe --help`
+
+## DLL 调用方式
+- 头文件：`include/petag_api.h`
+- 导出函数：
+  - `InsertPeTag(const wchar_t* filePath, const wchar_t* outputFilePath, const char* metadata, uint32_t metaLen) -> uint32_t`
+  - `ReadPeTag(const wchar_t* filePath, char* outMetadata, uint32_t outCapacity, uint32_t* outLen) -> uint32_t`
+- 示例（C/C++）：
+```
+#include <windows.h>
+#include <string>
+typedef uint32_t (WINAPI *InsertPeTagFn)(const wchar_t*, const wchar_t*, const char*, uint32_t);
+typedef uint32_t (WINAPI *ReadPeTagFn)(const wchar_t*, char*, uint32_t, uint32_t*);
+HMODULE h = LoadLibraryW(L"petag.dll");
+auto InsertPeTag = (InsertPeTagFn)GetProcAddress(h, "InsertPeTag");
+auto ReadPeTag = (ReadPeTagFn)GetProcAddress(h, "ReadPeTag");
+uint32_t st = InsertPeTag(L"input.exe", L"output.exe", "{test:1}", 8);
+char buf[256]; uint32_t out_len = 0;
+st = ReadPeTag(L"output.exe", buf, 256, &out_len);
+std::string meta(buf, buf + out_len);
+```
+
 
 ## 目录结构
 - `src/`：
@@ -35,3 +56,11 @@
 - 使用 VS2022 打开根目录 `pctag.sln`
 - 平台：`x64` 与 `Win32`
 - 配置：`Release` 推荐；`Debug` 需匹配第三方库的运行时（已按 Release 方式配置）
+
+## 发布产物
+- 生成位置：`out/x64/Release/petag2_package.zip`
+- 包含内容：
+  - `bin/petag.dll`
+  - `bin/petag2.exe`
+  - `include/petag_api.h`
+- 使用方式：解压后将 `bin` 拷贝到目标工程运行目录，开发集成引用 `include/petag_api.h`。
