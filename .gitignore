@@ -1,13 +1,19 @@
-out/
+# Build outputs
+/out/
+/.vs/
+
+# VS user files
+/build/msvc/*.vcxproj.user
+
+# Third-party build cache
+/third_party/boringssl/build/
+/third_party/boringssl/boringssl.zip.bak
+
+# Misc
 *.pdb
 *.obj
-*.iobj
-*.ipdb
-*.tlog/
-*.recipe
-*.ilk
 *.log
-.trae/
+*.exp
+*.lib
+*.dll
 
-# 保留 VS 项目文件
-!build/msvc/**

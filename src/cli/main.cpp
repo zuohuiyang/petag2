@@ -1,15 +1,18 @@
 #include <string>
 #include <vector>
-#include <iostream>
 #include <windows.h>
 
-#include "base/io.h"
 #include "base/logging.h"
-#include "codec/metadata_codec.h"
-#include "chrome/updater/certificate_tag.h"
+#include "petag_api.h"
 
-using updater::tagging::CreatePEBinary;
-using updater::tagging::BinaryInterface;
+typedef uint32_t (WINAPI *InsertPeTagFn)(const wchar_t* filePath,
+                                         const wchar_t* outputFilePath,
+                                         const uint8_t* tagData,
+                                         uint32_t tagLen);
+typedef uint32_t (WINAPI *ReadPeTagFn)(const wchar_t* filePath,
+                                       uint8_t* outTagData,
+                                       uint32_t outCapacity,
+                                       uint32_t* outLen);
 
 static void PrintHelp() {
   pctag::LogInfo("Usage:");
@@ -26,82 +29,54 @@ static std::wstring Utf8ToWide(const std::string& s) {
   return w;
 }
 
-static bool NormalizeWinCertificateLength(std::vector<uint8_t>& bytes) {
-  if (bytes.size() < sizeof(IMAGE_DOS_HEADER)) return false;
-  auto dos = reinterpret_cast<const IMAGE_DOS_HEADER*>(bytes.data());
-  if (dos->e_magic != 0x5A4D) return false;
-  size_t pe_off = static_cast<size_t>(dos->e_lfanew);
-  if (pe_off + sizeof(DWORD) + sizeof(IMAGE_FILE_HEADER) > bytes.size()) return false;
-  size_t opt_off = pe_off + sizeof(DWORD) + sizeof(IMAGE_FILE_HEADER);
-  if (opt_off + sizeof(IMAGE_OPTIONAL_HEADER32) > bytes.size()) return false;
-  uint16_t opt_magic = *reinterpret_cast<const uint16_t*>(bytes.data() + opt_off);
-  uint32_t cert_va = 0, cert_sz = 0;
-  if (opt_magic == 0x10b) {
-    auto opt = reinterpret_cast<const IMAGE_OPTIONAL_HEADER32*>(bytes.data() + opt_off);
-    cert_va = opt->DataDirectory[4].VirtualAddress;
-    cert_sz = opt->DataDirectory[4].Size;
-  } else if (opt_magic == 0x20b) {
-    auto opt = reinterpret_cast<const IMAGE_OPTIONAL_HEADER64*>(bytes.data() + opt_off);
-    cert_va = opt->DataDirectory[4].VirtualAddress;
-    cert_sz = opt->DataDirectory[4].Size;
-  } else {
-    return false;
-  }
-  if (cert_va == 0 || cert_sz < 8 || (size_t)cert_va + cert_sz > bytes.size()) return false;
-  uint32_t* len_ptr = reinterpret_cast<uint32_t*>(&bytes[cert_va]);
-  if (*len_ptr == cert_sz) return false;
-  *len_ptr = cert_sz;
-  return true;
-}
+// no-op
 
 int main(int argc, char** argv) {
   if (argc < 2) { PrintHelp(); return 1; }
   std::string cmd = argv[1];
   if (cmd == "--help" || cmd == "-h") { PrintHelp(); return 0; }
 
+  HMODULE h = LoadLibraryW(L"petag.dll");
+  if (!h) { pctag::LogError("Failed to load petag.dll"); return 1; }
+  auto InsertPeTag = reinterpret_cast<InsertPeTagFn>(GetProcAddress(h, "InsertPeTag"));
+  auto ReadPeTag = reinterpret_cast<ReadPeTagFn>(GetProcAddress(h, "ReadPeTag"));
+  if (!InsertPeTag || !ReadPeTag) { pctag::LogError("Missing DLL exports"); FreeLibrary(h); return 1; }
+
   if (cmd == "-e" || cmd == "--read") {
-    if (argc != 3) { pctag::LogError("Invalid arguments for read"); return 1; }
+    if (argc != 3) { pctag::LogError("Invalid arguments for read"); FreeLibrary(h); return 1; }
     std::wstring in = Utf8ToWide(argv[2]);
-    std::string err;
-    auto bytes = pctag::ReadFileBytes(in, &err);
-    if (bytes.empty()) { pctag::LogError(err); return 1; }
-    if (!pctag::IsPEFile(bytes)) { pctag::LogError("Input is not a PE file"); return 1; }
-    auto bin = CreatePEBinary(base::span<const uint8_t>(bytes.data(), bytes.size()));
-    if (!bin) { pctag::LogError("Failed to parse signed PE or not signed"); return 1; }
-    auto t = bin->tag();
-    if (!t || t->empty()) { pctag::LogInfo("No metadata tag found"); return 0; }
-    std::string meta;
-    if (!pctag::DecodeMetadata(*t, &meta, &err)) { pctag::LogError(err); return 1; }
+    uint32_t need = 0;
+    char small[64];
+    uint32_t out_len = 0;
+    uint32_t st = ReadPeTag(in.c_str(), reinterpret_cast<uint8_t*>(small), (uint32_t)sizeof(small), &out_len);
+    if (st == PETAG_E_NOT_FOUND) { pctag::LogInfo("No metadata tag found"); FreeLibrary(h); return 0; }
+    if (st == PETAG_E_BUFFER_TOO_SMALL) {
+      need = out_len;
+      std::string buf; buf.resize(need);
+      st = ReadPeTag(in.c_str(), reinterpret_cast<uint8_t*>(&buf[0]), (uint32_t)buf.size(), &out_len);
+      if (st != PETAG_OK) { pctag::LogError("Failed to read tag, code: " + std::to_string(st)); FreeLibrary(h); return 1; }
+      pctag::LogInfo("Metadata: " + buf);
+      FreeLibrary(h);
+      return 0;
+    }
+    if (st != PETAG_OK) { pctag::LogError("Failed to read tag, code: " + std::to_string(st)); FreeLibrary(h); return 1; }
+    std::string meta(small, small + out_len);
     pctag::LogInfo("Metadata: " + meta);
+    FreeLibrary(h);
     return 0;
   }
 
   
 
   if (cmd == "-i" || cmd == "--insert") {
-    if (argc != 5) { pctag::LogError("Invalid arguments for insert"); PrintHelp(); return 1; }
+    if (argc != 5) { pctag::LogError("Invalid arguments for insert"); PrintHelp(); FreeLibrary(h); return 1; }
     std::wstring in = Utf8ToWide(argv[2]);
     std::wstring out = Utf8ToWide(argv[3]);
     std::string meta_arg = argv[4];
-    if (in == out) { pctag::LogError("Output must be a different file"); return 1; }
-    std::string err;
-    auto bytes = pctag::ReadFileBytes(in, &err);
-    if (bytes.empty()) { pctag::LogError(err); return 1; }
-    if (!pctag::IsPEFile(bytes)) { pctag::LogError("Input is not a PE file"); return 1; }
-    auto bin = CreatePEBinary(base::span<const uint8_t>(bytes.data(), bytes.size()));
-    if (!bin) {
-      bool fixed = NormalizeWinCertificateLength(bytes);
-      if (fixed) {
-        bin = CreatePEBinary(base::span<const uint8_t>(bytes.data(), bytes.size()));
-      }
-    }
-    if (!bin) { pctag::LogError("Failed to parse signed PE or not signed"); return 1; }
-    auto tag_bytes = pctag::EncodeMetadata(meta_arg, &err);
-    if (tag_bytes.empty()) { pctag::LogError(err); return 1; }
-    auto updated = bin->SetTag(base::span<const uint8_t>(tag_bytes.data(), tag_bytes.size()));
-    if (!updated) { pctag::LogError("Failed to set tag"); return 1; }
-    if (!pctag::WriteFileBytes(out, *updated, true, &err)) { pctag::LogError(err); return 1; }
+    uint32_t st = InsertPeTag(in.c_str(), out.c_str(), reinterpret_cast<const uint8_t*>(meta_arg.data()), (uint32_t)meta_arg.size());
+    if (st != PETAG_OK) { pctag::LogError("Failed to insert tag, code: " + std::to_string(st)); FreeLibrary(h); return 1; }
     pctag::LogInfo("Tag inserted");
+    FreeLibrary(h);
     return 0;
   }
 
@@ -111,5 +86,6 @@ int main(int argc, char** argv) {
 
   pctag::LogError("Unknown command");
   PrintHelp();
+  FreeLibrary(h);
   return 1;
 }
