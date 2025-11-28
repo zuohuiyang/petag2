@@ -1,19 +1,18 @@
-# Build outputs
+# Ignore local build outputs and intermediates
 /out/
+/third_party/boringssl/build*/
 /.vs/
+*.user
+*.suo
 
-# VS user files
-/build/msvc/*.vcxproj.user
-
-# Third-party build cache
-/third_party/boringssl/build/
-/third_party/boringssl/boringssl.zip.bak
-
-# Misc
-*.pdb
+# VS/MSVC intermediates
 *.obj
-*.log
+*.ipdb
+*.iobj
+*.tlog
 *.exp
-*.lib
-*.dll
+*.log
 
+# Ignore distributable artifacts
+/dist/
+third_party/boringssl/boringssl.zip.bak

@@ -36,6 +36,12 @@ include(gen/sources.cmake)
 enable_language(C)
 enable_language(CXX)
 
+# Force MSVC static runtime for Release builds
+if(MSVC)
+  cmake_policy(SET CMP0091 NEW)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
+endif()
+
 # TODO(crbug,com/389897612): Register tests with CTest. For now, we include this
 # only to pick up the standard |BUILD_TESTING| option.
 include(CTest)
