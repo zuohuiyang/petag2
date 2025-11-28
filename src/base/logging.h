@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PETAG2_BASE_LOGGING_H_
+#define PETAG2_BASE_LOGGING_H_
 #include <string>
 
 namespace pctag {
@@ -8,3 +9,4 @@ void LogError(const std::string& msg);
 
 }
 
+#endif  // PETAG2_BASE_LOGGING_H_

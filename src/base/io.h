@@ -1,6 +1,8 @@
-#pragma once
+#ifndef PETAG2_BASE_IO_H_
+#define PETAG2_BASE_IO_H_
 #include <string>
 #include <vector>
+#include <cstdint>
 
 namespace pctag {
 
@@ -11,3 +13,4 @@ bool IsPEFile(const std::vector<uint8_t>& data);
 
 }
 
+#endif  // PETAG2_BASE_IO_H_

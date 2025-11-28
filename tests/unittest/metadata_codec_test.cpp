@@ -4,7 +4,7 @@
 
 int main() {
   std::string err;
-  auto enc = pctag::EncodeMetadata("{test_chan:123}", &err);
+  std::vector<uint8_t> enc = pctag::EncodeMetadata("{test_chan:123}", &err);
   assert(!enc.empty());
   std::string out;
   bool ok = pctag::DecodeMetadata(enc, &out, &err);

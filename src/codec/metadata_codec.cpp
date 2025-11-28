@@ -1,7 +1,8 @@
 #include "codec/metadata_codec.h"
-#include <cstdint>
 
 namespace pctag {
+
+static constexpr uint8_t kTagVersion = 0x01;
 
 static uint32_t Crc32(const uint8_t* data, size_t len) {
   uint32_t crc = 0xFFFFFFFFu;
@@ -31,7 +32,7 @@ std::vector<uint8_t> EncodeMetadata(const std::string& ascii, std::string* err) 
   }
   std::vector<uint8_t> out;
   out.reserve(1 + 1 + ascii.size() + 4);
-  out.push_back(0x01);
+  out.push_back(kTagVersion);
   out.push_back(static_cast<uint8_t>(ascii.size()));
   out.insert(out.end(), ascii.begin(), ascii.end());
   uint32_t crc = Crc32(reinterpret_cast<const uint8_t*>(ascii.data()), ascii.size());
@@ -47,7 +48,7 @@ bool DecodeMetadata(const std::vector<uint8_t>& tag, std::string* out, std::stri
     if (err) *err = "Tag too short";
     return false;
   }
-  if (tag[0] != 0x01) {
+  if (tag[0] != kTagVersion) {
     if (err) *err = "Unsupported version";
     return false;
   }

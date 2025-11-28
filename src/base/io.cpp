@@ -1,7 +1,5 @@
 #include "base/io.h"
 #include <windows.h>
-#include <cstdio>
-#include <cerrno>
 
 namespace pctag {
 

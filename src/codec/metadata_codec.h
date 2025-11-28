@@ -1,6 +1,8 @@
-#pragma once
+#ifndef PETAG2_CODEC_METADATA_CODEC_H_
+#define PETAG2_CODEC_METADATA_CODEC_H_
 #include <string>
 #include <vector>
+#include <cstdint>
 
 namespace pctag {
 
@@ -10,3 +12,4 @@ bool IsValidAscii(const std::string& s);
 
 }
 
+#endif  // PETAG2_CODEC_METADATA_CODEC_H_

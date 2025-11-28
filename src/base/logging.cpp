@@ -1,6 +1,5 @@
 #include "base/logging.h"
 #include <windows.h>
-#include <cstdio>
 
 namespace pctag {
 
@@ -25,4 +24,3 @@ void LogError(const std::string& msg) {
 }
 
 }
-
