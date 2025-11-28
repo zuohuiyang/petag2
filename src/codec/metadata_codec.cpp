@@ -16,7 +16,7 @@ static uint32_t Crc32(const uint8_t* data, size_t len) {
 }
 
 bool IsValidAscii(const std::string& s) {
-  if (s.size() < 2 || s.size() > 30) return false;
+  if (s.size() < 1 || s.size() > 255) return false;
   for (char c : s) {
     unsigned char uc = static_cast<unsigned char>(c);
     if (uc < 0x20 || uc > 0x7E) return false;
@@ -26,7 +26,7 @@ bool IsValidAscii(const std::string& s) {
 
 std::vector<uint8_t> EncodeMetadata(const std::string& ascii, std::string* err) {
   if (!IsValidAscii(ascii)) {
-    if (err) *err = "Invalid metadata: ASCII 2-30 chars required";
+    if (err) *err = "Invalid metadata: ASCII 1-255 chars required";
     return {};
   }
   std::vector<uint8_t> out;
@@ -75,4 +75,3 @@ bool DecodeMetadata(const std::vector<uint8_t>& tag, std::string* out, std::stri
 }
 
 }
-

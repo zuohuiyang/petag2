@@ -16,7 +16,7 @@ extern "C" {
 
 uint32_t WINAPI InsertPeTag(const wchar_t* filePath,
                             const wchar_t* outputFilePath,
-                            const uint8_t* tagData,
+                            const char* tagData,
                             uint32_t tagLen) {
   if (!filePath || !outputFilePath || !tagData || tagLen == 0) {
     return PETAG_E_INVALID_ARG;
@@ -31,8 +31,7 @@ uint32_t WINAPI InsertPeTag(const wchar_t* filePath,
     return PETAG_E_FORMAT;
   }
 
-  // Encode ASCII metadata into tag bytes inside DLL.
-  std::string ascii(reinterpret_cast<const char*>(tagData), static_cast<size_t>(tagLen));
+  std::string ascii(tagData, tagData + static_cast<size_t>(tagLen));
   auto encoded = pctag::EncodeMetadata(ascii, &err);
   if (encoded.empty()) {
     return PETAG_E_INVALID_ARG;
@@ -93,7 +92,7 @@ uint32_t WINAPI InsertPeTag(const wchar_t* filePath,
 }
 
 uint32_t WINAPI ReadPeTag(const wchar_t* filePath,
-                          uint8_t* outTagData,
+                          char* outTagData,
                           uint32_t outCapacity,
                           uint32_t* outLen) {
   if (!filePath || !outLen) {

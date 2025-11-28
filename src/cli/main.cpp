@@ -7,10 +7,10 @@
 
 typedef uint32_t (WINAPI *InsertPeTagFn)(const wchar_t* filePath,
                                          const wchar_t* outputFilePath,
-                                         const uint8_t* tagData,
+                                         const char* tagData,
                                          uint32_t tagLen);
 typedef uint32_t (WINAPI *ReadPeTagFn)(const wchar_t* filePath,
-                                       uint8_t* outTagData,
+                                       char* outTagData,
                                        uint32_t outCapacity,
                                        uint32_t* outLen);
 
@@ -48,12 +48,12 @@ int main(int argc, char** argv) {
     uint32_t need = 0;
     char small[64];
     uint32_t out_len = 0;
-    uint32_t st = ReadPeTag(in.c_str(), reinterpret_cast<uint8_t*>(small), (uint32_t)sizeof(small), &out_len);
+    uint32_t st = ReadPeTag(in.c_str(), small, (uint32_t)sizeof(small), &out_len);
     if (st == PETAG_E_NOT_FOUND) { pctag::LogInfo("No metadata tag found"); FreeLibrary(h); return 0; }
     if (st == PETAG_E_BUFFER_TOO_SMALL) {
       need = out_len;
       std::string buf; buf.resize(need);
-      st = ReadPeTag(in.c_str(), reinterpret_cast<uint8_t*>(&buf[0]), (uint32_t)buf.size(), &out_len);
+      st = ReadPeTag(in.c_str(), &buf[0], (uint32_t)buf.size(), &out_len);
       if (st != PETAG_OK) { pctag::LogError("Failed to read tag, code: " + std::to_string(st)); FreeLibrary(h); return 1; }
       pctag::LogInfo("Metadata: " + buf);
       FreeLibrary(h);
@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
     std::wstring in = Utf8ToWide(argv[2]);
     std::wstring out = Utf8ToWide(argv[3]);
     std::string meta_arg = argv[4];
-    uint32_t st = InsertPeTag(in.c_str(), out.c_str(), reinterpret_cast<const uint8_t*>(meta_arg.data()), (uint32_t)meta_arg.size());
+    uint32_t st = InsertPeTag(in.c_str(), out.c_str(), meta_arg.c_str(), (uint32_t)meta_arg.size());
     if (st != PETAG_OK) { pctag::LogError("Failed to insert tag, code: " + std::to_string(st)); FreeLibrary(h); return 1; }
     pctag::LogInfo("Tag inserted");
     FreeLibrary(h);

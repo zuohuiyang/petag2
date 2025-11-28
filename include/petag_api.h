@@ -31,12 +31,12 @@ enum PetagStatus : uint32_t {
 PETAG_API uint32_t WINAPI InsertPeTag(
     const wchar_t* filePath,
     const wchar_t* outputFilePath,
-    const uint8_t* tagData,
+    const char* tagData,
     uint32_t tagLen);
 
 PETAG_API uint32_t WINAPI ReadPeTag(
     const wchar_t* filePath,
-    uint8_t* outTagData,
+    char* outTagData,
     uint32_t outCapacity,
     uint32_t* outLen);
 

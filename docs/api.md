@@ -8,6 +8,11 @@
 - `EncodeMetadata(std::string, std::string* err) -> std::vector<uint8_t>`
 - `DecodeMetadata(std::vector<uint8_t>, std::string* out, std::string* err) -> bool`
 
+## DLL API（仅字符串）
+- `InsertPeTag(const wchar_t* filePath, const wchar_t* outputFilePath, const char* metadata, uint32_t metaLen) -> uint32_t`
+- `ReadPeTag(const wchar_t* filePath, char* outMetadata, uint32_t outCapacity, uint32_t* outLen) -> uint32_t`
+- 元数据格式：可打印 ASCII 字符串，长度 1-255 字节（内部使用单字节长度字段）。
+
 ## 文件I/O
 - `ReadFileBytes(std::wstring, std::string* err) -> std::vector<uint8_t>`
 - `WriteFileBytes(std::wstring, std::vector<uint8_t>, bool overwrite, std::string* err) -> bool`
