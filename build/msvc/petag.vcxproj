@@ -93,7 +93,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_HAS_EXCEPTIONS=0;_DEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\src;$(ProjectDir)..\..\chrome;$(ProjectDir)..\..\third_party\boringssl\src\include;$(ProjectDir)..\..\third_party\abseil-cpp;$(ProjectDir)..\..\base;$(ProjectDir)..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\src;$(ProjectDir)..\..\third_party\chrome_updater;$(ProjectDir)..\..\third_party\boringssl\src\include;$(ProjectDir)..\..\third_party\abseil-cpp;$(ProjectDir)..\..\base;$(ProjectDir)..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -112,7 +112,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_HAS_EXCEPTIONS=0;_DEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\src;$(ProjectDir)..\..\chrome;$(ProjectDir)..\..\third_party\boringssl\src\include;$(ProjectDir)..\..\third_party\abseil-cpp;$(ProjectDir)..\..\base;$(ProjectDir)..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\src;$(ProjectDir)..\..\third_party\chrome_updater;$(ProjectDir)..\..\third_party\boringssl\src\include;$(ProjectDir)..\..\third_party\abseil-cpp;$(ProjectDir)..\..\base;$(ProjectDir)..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -130,7 +130,7 @@
       <Optimization>MaxSpeed</Optimization>
       <PreprocessorDefinitions>_HAS_EXCEPTIONS=0;NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\src;$(ProjectDir)..\..\chrome;$(ProjectDir)..\..\third_party\boringssl\src\include;$(ProjectDir)..\..\third_party\abseil-cpp;$(ProjectDir)..\..\base;$(ProjectDir)..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\src;$(ProjectDir)..\..\third_party\chrome_updater;$(ProjectDir)..\..\third_party\boringssl\src\include;$(ProjectDir)..\..\third_party\abseil-cpp;$(ProjectDir)..\..\base;$(ProjectDir)..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -151,7 +151,7 @@
       <Optimization>MaxSpeed</Optimization>
       <PreprocessorDefinitions>_HAS_EXCEPTIONS=0;NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\src;$(ProjectDir)..\..\chrome;$(ProjectDir)..\..\third_party\boringssl\src\include;$(ProjectDir)..\..\third_party\abseil-cpp;$(ProjectDir)..\..\base;$(ProjectDir)..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\src;$(ProjectDir)..\..\third_party\chrome_updater;$(ProjectDir)..\..\third_party\boringssl\src\include;$(ProjectDir)..\..\third_party\abseil-cpp;$(ProjectDir)..\..\base;$(ProjectDir)..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -171,14 +171,14 @@
     <ClCompile Include="..\..\src\base\io.cpp" />
     <ClCompile Include="..\..\src\base\logging.cpp" />
     <ClCompile Include="..\..\src\codec\metadata_codec.cpp" />
-    <ClCompile Include="..\..\chrome\updater\certificate_tag.cc" />
+    <ClCompile Include="..\..\third_party\chrome_updater\chrome\updater\certificate_tag.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\base\io.h" />
     <ClInclude Include="..\..\src\base\logging.h" />
     <ClInclude Include="..\..\src\codec\metadata_codec.h" />
-    <ClInclude Include="..\..\chrome\updater\certificate_tag.h" />
-    <ClInclude Include="..\..\chrome\updater\certificate_tag_internal.h" />
+    <ClInclude Include="..\..\third_party\chrome_updater\chrome\updater\certificate_tag.h" />
+    <ClInclude Include="..\..\third_party\chrome_updater\chrome\updater\certificate_tag_internal.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

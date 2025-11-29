@@ -1,9 +1,12 @@
 # petag2 项目说明
 
+在不破坏签名的前提下，为已签名 Windows PE 写入/读取短元数据的工具（基于 Chromium Certificate Tag）。
+Embed and read short metadata in Authenticode-signed Windows PE without breaking the signature (based on Chromium Certificate Tag).
+
 ## 工程作用
 - 为已签名的 Windows 可执行文件（PE）嵌入简短的元数据信息，并且嵌入后仍能通过系统的 Authenticode 签名校验。
 - 通过在签名容器（PKCS#7）中利用不参与哈希的可变扩展区域写入数据，避免破坏原有签名哈希，从而保证签名有效性。
-- 本工程仅封装并调用了 Chromium Updater 的证书标签实现，核心逻辑位于 `chrome/updater/certificate_tag.*`。
+- 本工程仅封装并调用了 Chromium Updater 的证书标签实现，核心逻辑位于 `third_party/chrome_updater/chrome/updater/certificate_tag.*`。
 
 ## 使用
 - Usage:
@@ -45,7 +48,7 @@ std::string meta(buf, buf + out_len);
   - `base/`：文件 I/O 与日志
   - `cli/`：命令行入口（help/insert/read）
   - `codec/`：元数据编解码
-- `chrome/updater/`：证书标签操作（Chromium 代码）
+- `third_party/chrome_updater/chrome/updater/`：证书标签操作（Chromium 代码，原始源码保留）
 - `tests/unittest/`：`metadata_codec` 单元测试
 - `scripts/`：集成测试脚本
 - `build/msvc/`：VS 项目文件（`petag.vcxproj`、`unittest.vcxproj`）

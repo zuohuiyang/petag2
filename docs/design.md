@@ -5,7 +5,7 @@
 - 封装Chromium SCT方案：仅调用`CreatePEBinary`、`SetTag`、`tag`。
 
 ## 架构
-- 模块：cli、base(io/logging)、codec(metadata)、verify(CryptoAPI)、依赖(chrome/updater)。
+- 模块：cli、base(io/logging)、codec(metadata)、verify(CryptoAPI)、依赖(third_party/chrome_updater/chrome/updater)。
 - 依赖：BoringSSL（不改动源码）、Windows CryptoAPI。
 
 ## 流程
@@ -20,4 +20,3 @@
 
 ## 安全
 - 不覆盖原文件；严格I/O错误处理；保持签名有效不修改SignerInfo。
-
