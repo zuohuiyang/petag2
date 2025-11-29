@@ -3,7 +3,7 @@ $root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $dist = Join-Path $root 'dist'
 $x64Out = Join-Path $root 'out\x64\Release'
 $x86Out = Join-Path $root 'out\x86\Release'
-$hdrSrc = Join-Path $root 'include\petag_api.h'
+$hdrSrc = Join-Path $root 'src\petag_api.h'
 $licenseSrc = Join-Path $root 'LICENSE'
 
 New-Item -ItemType Directory -Force -Path $dist | Out-Null

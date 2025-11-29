@@ -2,7 +2,7 @@
 setlocal
 set TOOL=%~dp0..\out\x64\Release\petag2.exe
 set DLL=%~dp0..\out\x64\Release\petag.dll
-set SAMPLE=%~dp0..\samples\signed.exe
+set SAMPLE=%~dp0signed.exe
 set OUTPUT=%~dp0..\out\x64\Release\signed_tagged.exe
 
 if not exist "%TOOL%" (

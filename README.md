@@ -18,12 +18,12 @@ Embed and read short metadata in Authenticode-signed Windows PE without breaking
   - `<input>` 为源签名文件路径（PE 文件，如 `.exe`）
   - `<output>` 为目标文件路径（写入嵌入信息后的新文件）
 - 示例：
-  - 插入：`petag2.exe --insert .\samples\signed.exe .\out\x64\Release\signed_tagged.exe "{\"test_chan\":123}"`
+  - 插入：`petag2.exe --insert .\tools\signed.exe .\out\x64\Release\signed_tagged.exe "{\"test_chan\":123}"`
   - 读取：`petag2.exe --read .\out\x64\Release\signed_tagged.exe`
   - 帮助：`petag2.exe --help`
 
 ## DLL 调用方式
-- 头文件：`include/petag_api.h`
+- 头文件：`src/petag_api.h`
 - 导出函数：
   - `InsertPeTag(const wchar_t* filePath, const wchar_t* outputFilePath, const char* metadata, uint32_t metaLen) -> uint32_t`
   - `ReadPeTag(const wchar_t* filePath, char* outMetadata, uint32_t outCapacity, uint32_t* outLen) -> uint32_t`
@@ -50,8 +50,8 @@ std::string meta(buf, buf + out_len);
   - `codec/`：元数据编解码
 - `third_party/chrome_updater/chrome/updater/`：证书标签操作（Chromium 代码，原始源码保留）
 - `src/codec/tests/`：`metadata_codec` 单元测试（与模块就近）
-- `scripts/`：集成测试脚本
-- `build/msvc/`：VS 项目文件（`petag.vcxproj`、`unittest.vcxproj`）
+ - `tools/`：构建、打包与测试工具集合（含 `run_tests.bat`、样例 `signed.exe`）
+ - `tools/msvc/`：VS 项目文件（`petag.vcxproj`、`unittest.vcxproj`、`petag_dll.vcxproj`）
 - `third_party/boringssl/`：第三方库与头文件
 - `out/`：构建产物输出目录
 

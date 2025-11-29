@@ -15,4 +15,4 @@
 - 若提示未签名或解析失败，请确认输入为已签名PE文件。
 
 ## 集成测试
-- 放置`samples/signed.exe`，运行`scripts/run_tests.bat`。
+- 放置`tools/signed.exe`，运行`tools/run_tests.bat`。
