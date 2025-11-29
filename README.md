@@ -49,7 +49,7 @@ std::string meta(buf, buf + out_len);
   - `cli/`：命令行入口（help/insert/read）
   - `codec/`：元数据编解码
 - `third_party/chrome_updater/chrome/updater/`：证书标签操作（Chromium 代码，原始源码保留）
-- `tests/unittest/`：`metadata_codec` 单元测试
+- `src/codec/tests/`：`metadata_codec` 单元测试（与模块就近）
 - `scripts/`：集成测试脚本
 - `build/msvc/`：VS 项目文件（`petag.vcxproj`、`unittest.vcxproj`）
 - `third_party/boringssl/`：第三方库与头文件
