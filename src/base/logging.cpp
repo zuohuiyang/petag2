@@ -1,7 +1,7 @@
 #include "base/logging.h"
 #include <windows.h>
 
-namespace pctag {
+namespace petag {
 
 static void WriteStdOut(const std::string& s) {
   HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);

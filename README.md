@@ -48,12 +48,12 @@ std::string meta(buf, buf + out_len);
 - `chrome/updater/`：证书标签操作（Chromium 代码）
 - `tests/unittest/`：`metadata_codec` 单元测试
 - `scripts/`：集成测试脚本
-- `build/msvc/`：VS 项目文件（`pctag.vcxproj`、`unittest.vcxproj`）
+- `build/msvc/`：VS 项目文件（`petag.vcxproj`、`unittest.vcxproj`）
 - `third_party/boringssl/`：第三方库与头文件
 - `out/`：构建产物输出目录
 
 ## 构建
-- 使用 VS2022 打开根目录 `pctag.sln`
+- 使用 VS2022 打开根目录 `petag.sln`
 - 平台：`x64` 与 `Win32`
 - 配置：`Release` 推荐；`Debug` 需匹配第三方库的运行时（已按 Release 方式配置）
 

@@ -2,7 +2,7 @@
 #define PETAG2_BASE_LOGGING_H_
 #include <string>
 
-namespace pctag {
+namespace petag {
 
 void LogInfo(const std::string& msg);
 void LogError(const std::string& msg);

@@ -1,7 +1,7 @@
 #include "base/io.h"
 #include <windows.h>
 
-namespace pctag {
+namespace petag {
 
 static std::wstring ToLongPath(const std::wstring& p) {
   if (p.empty()) return p;

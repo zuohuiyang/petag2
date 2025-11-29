@@ -4,7 +4,7 @@
 #include <vector>
 #include <cstdint>
 
-namespace pctag {
+namespace petag {
 
 std::vector<uint8_t> ReadFileBytes(const std::wstring& path, std::string* err);
 bool WriteFileBytes(const std::wstring& path, const std::vector<uint8_t>& data, bool overwrite, std::string* err);

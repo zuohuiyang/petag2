@@ -1,7 +1,7 @@
 # 用户操作手册
 
 ## 安装
-- 使用VS2022打开工程根目录下的`pctag.sln`，配置x64 Release。
+- 使用VS2022打开工程根目录下的`petag.sln`，配置x64 Release。
 - 确保`third_party/boringssl/src/include`与`third_party/boringssl/lib/crypto.lib`存在。
 
 ## 使用

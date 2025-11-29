@@ -1,6 +1,6 @@
 #include "codec/metadata_codec.h"
 
-namespace pctag {
+namespace petag {
 
 static constexpr uint8_t kTagVersion = 0x01;
 

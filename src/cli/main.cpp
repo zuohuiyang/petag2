@@ -14,11 +14,11 @@ typedef uint32_t (WINAPI *ReadPeTagFn)(const wchar_t* filePath,
                                        uint32_t* outLen);
 
 static void PrintHelp() {
-  pctag::LogInfo("Usage:");
-  pctag::LogInfo("  petag2 -i|--insert <input> <output> <metadata>");
-  pctag::LogInfo("  petag2 -e|--read <input>");
-  pctag::LogInfo("Options:");
-  pctag::LogInfo("  --help    Show this help message");
+  petag::LogInfo("Usage:");
+  petag::LogInfo("  petag2 -i|--insert <input> <output> <metadata>");
+  petag::LogInfo("  petag2 -e|--read <input>");
+  petag::LogInfo("Options:");
+  petag::LogInfo("  --help    Show this help message");
 }
 
 static std::wstring Utf8ToWide(const std::string& s) {
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 
   HMODULE h = LoadLibraryW(L"petag.dll");
   if (!h) {
-    pctag::LogError("Failed to load petag.dll");
+    petag::LogError("Failed to load petag.dll");
     return 1;
   }
   InsertPeTagFn InsertPeTag =
@@ -46,14 +46,14 @@ int main(int argc, char** argv) {
   ReadPeTagFn ReadPeTag =
       reinterpret_cast<ReadPeTagFn>(GetProcAddress(h, "ReadPeTag"));
   if (!InsertPeTag || !ReadPeTag) {
-    pctag::LogError("Missing DLL exports");
+    petag::LogError("Missing DLL exports");
     FreeLibrary(h);
     return 1;
   }
 
   if (cmd == "-e" || cmd == "--read") {
     if (argc != 3) {
-      pctag::LogError("Invalid arguments for read");
+      petag::LogError("Invalid arguments for read");
       FreeLibrary(h);
       return 1;
     }
@@ -63,33 +63,33 @@ int main(int argc, char** argv) {
     char small[kSmallBufferSize];
     uint32_t out_len = 0;
     uint32_t st = ReadPeTag(in.c_str(), small, (uint32_t)sizeof(small), &out_len);
-    if (st == PETAG_E_NOT_FOUND) { pctag::LogInfo("No metadata tag found"); FreeLibrary(h); return 0; }
+    if (st == PETAG_E_NOT_FOUND) { petag::LogInfo("No metadata tag found"); FreeLibrary(h); return 0; }
     if (st == PETAG_E_BUFFER_TOO_SMALL) {
       need = out_len;
       std::string buf; buf.resize(need);
       st = ReadPeTag(in.c_str(), &buf[0], (uint32_t)buf.size(), &out_len);
       if (st != PETAG_OK) {
-        pctag::LogError("Failed to read tag, code: " + std::to_string(st));
+        petag::LogError("Failed to read tag, code: " + std::to_string(st));
         FreeLibrary(h);
         return 1;
       }
-      pctag::LogInfo("Metadata: " + buf);
+      petag::LogInfo("Metadata: " + buf);
       FreeLibrary(h);
       return 0;
     }
     if (st != PETAG_OK) {
-      pctag::LogError("Failed to read tag, code: " + std::to_string(st));
+      petag::LogError("Failed to read tag, code: " + std::to_string(st));
       FreeLibrary(h);
       return 1;
     }
     std::string meta(small, small + out_len);
-    pctag::LogInfo("Metadata: " + meta);
+    petag::LogInfo("Metadata: " + meta);
     FreeLibrary(h);
     return 0;
   }
   if (cmd == "-i" || cmd == "--insert") {
     if (argc != 5) {
-      pctag::LogError("Invalid arguments for insert");
+      petag::LogError("Invalid arguments for insert");
       PrintHelp();
       FreeLibrary(h);
       return 1;
@@ -99,15 +99,15 @@ int main(int argc, char** argv) {
     std::string meta_arg = argv[4];
     uint32_t st = InsertPeTag(in.c_str(), out.c_str(), meta_arg.c_str(), (uint32_t)meta_arg.size());
     if (st != PETAG_OK) {
-      pctag::LogError("Failed to insert tag, code: " + std::to_string(st));
+      petag::LogError("Failed to insert tag, code: " + std::to_string(st));
       FreeLibrary(h);
       return 1;
     }
-    pctag::LogInfo("Tag inserted");
+    petag::LogInfo("Tag inserted");
     FreeLibrary(h);
     return 0;
   }
-  pctag::LogError("Unknown command");
+  petag::LogError("Unknown command");
   PrintHelp();
   FreeLibrary(h);
   return 1;
